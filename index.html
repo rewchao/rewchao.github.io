@@ -1,1 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>andrew chao</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link id="font-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&display=swap">
+  <style>
+    /* ---- palette: change these to restyle the whole site ---- */
+    :root {
+      --bg: #FFFFFF;        /* page background */
+      --text: #111111;      /* main text */
+      --muted: #6B6B6B;     /* descriptions, secondary text */
+      --line: #E4E4E4;      /* dividers and borders */
+      --surface: #F5F5F4;   /* image placeholders, hover */
+      --accent: #2B59C3;    /* link hover only */
 
+      /* ---- font: swap this line to change the site font ---- */
+      --font: "Source Sans 3", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--accent); }
+
+    .layout { display: flex; min-height: 100vh; }
+
+    /* ---- sidebar ---- */
+    .sidebar {
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      width: 230px;
+      flex-shrink: 0;
+      height: 100vh;
+      overflow-y: auto;
+      border-right: 1px solid var(--line);
+      padding: 28px 24px;
+    }
+    .name { display: block; font-size: 1.3rem; font-weight: 600; margin-bottom: 28px; }
+    .sidebar h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin: 0 0 8px;
+    }
+    .sidebar ul { list-style: none; margin: 0 0 28px; padding: 0; }
+    .sidebar li { margin: 4px 0; }
+
+    /* ---- main ---- */
+    main { flex: 1; padding: 28px 48px 80px; max-width: 900px; }
+    main h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 24px; }
+    main h1.past { margin-top: 64px; padding-top: 32px; border-top: 1px solid var(--line); }
+
+    .project { display: flex; gap: 24px; margin-bottom: 36px; scroll-margin-top: 24px; }
+    .project .img {
+      width: 320px;
+      aspect-ratio: 4 / 3;
+      flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .project h3 { margin: 0 0 6px; font-size: 1.15rem; font-weight: 600; }
+    .project p { margin: 0; color: var(--muted); }
+    .project.small .img { width: 200px; }
+
+    @media (max-width: 760px) {
+      .layout { flex-direction: column; }
+      .sidebar { position: static; align-self: stretch; width: auto; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 16px; }
+      .sidebar ul { margin-bottom: 16px; }
+      main { padding: 24px 16px 60px; }
+      .project { flex-direction: column; gap: 12px; }
+      .project .img, .project.small .img { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar">
+      <a class="name" href="#top">andrew chao</a>
+      <h2>current projects</h2>
+      <ul id="nav-current"></ul>
+      <h2>past projects</h2>
+      <ul id="nav-past"></ul>
+    </nav>
+
+    <main id="top">
+      <h1>im currently working on:</h1>
+      <div id="current"></div>
+
+      <h1 class="past" id="past-projects">past projects</h1>
+      <div id="past"></div>
+    </main>
+  </div>
+
+  <script>
+    // ---- projects: edit this list; the sidebar and main area both read from it ----
+    // image: path to a picture (e.g. "images/robot.jpg"), or leave "" for a grey placeholder
+    const projects = {
+      current: [
+        { title: "project 1", desc: "a short description of what this project is and what you're doing on it.", image: "" },
+        { title: "project 2", desc: "another short description, one or two sentences.", image: "" },
+        { title: "project 3", desc: "placeholder text for a third current project.", image: "" },
+      ],
+      past: [
+        { title: "past project a", desc: "what it was, and what came out of it.", image: "" },
+        { title: "past project b", desc: "short description of an older project.", image: "" },
+        { title: "past project c", desc: "short description of an older project.", image: "" },
+      ],
+    };
+
+    const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+    function render(list, navId, mainId, small) {
+      const nav = document.getElementById(navId);
+      const main = document.getElementById(mainId);
+      for (const p of list) {
+        const id = slug(p.title);
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="#${id}"></a>`;
+        li.firstChild.textContent = p.title;
+        nav.appendChild(li);
+
+        const card = document.createElement("article");
+        card.className = "project" + (small ? " small" : "");
+        card.id = id;
+        const img = p.image
+          ? Object.assign(document.createElement("img"), { className: "img", src: p.image, alt: p.title })
+          : Object.assign(document.createElement("div"), { className: "img", textContent: "image" });
+        const text = document.createElement("div");
+        text.innerHTML = "<h3></h3><p></p>";
+        text.querySelector("h3").textContent = p.title;
+        text.querySelector("p").textContent = p.desc;
+        card.append(img, text);
+        main.appendChild(card);
+      }
+    }
+    render(projects.current, "nav-current", "current", false);
+    render(projects.past, "nav-past", "past", true);
+
+    // ---- temporary: try other fonts with ?font=lora (see options.html). Remove once a font is picked. ----
+    const fontOptions = {
+      "source-sans": ['"Source Sans 3", sans-serif', "Source+Sans+3:wght@400;600"],
+      "ibm-plex": ['"IBM Plex Sans", sans-serif', "IBM+Plex+Sans:wght@400;600"],
+      "lora": ['"Lora", serif', "Lora:wght@400;600"],
+      "source-serif": ['"Source Serif 4", serif', "Source+Serif+4:opsz,wght@8..60,400;8..60,600"],
+      "plex-mono": ['"IBM Plex Mono", monospace', "IBM+Plex+Mono:wght@400;600"],
+      "system": ["system-ui, sans-serif", null],
+    };
+    const choice = fontOptions[new URLSearchParams(location.search).get("font")];
+    if (choice) {
+      const [css, query] = choice;
+      if (query) document.getElementById("font-link").href = `https://fonts.googleapis.com/css2?family=${query}&display=swap`;
+      document.documentElement.style.setProperty("--font", css);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>palette + font options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600&family=Lora:wght@400;600&family=Source+Sans+3:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+  <style>
+    :root { --bg: #FFFFFF; --text: #111111; --muted: #6B6B6B; --line: #E4E4E4; --surface: #F5F5F4; --accent: #2B59C3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; line-height: 1.5; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 32px 16px 80px; }
+    h1 { font-size: 1.4rem; margin: 0 0 4px; }
+    .note { color: var(--muted); margin: 0 0 32px; }
+    h2 { font-size: 1rem; margin: 40px 0 14px; }
+
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .swatch { border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .swatch .chip { height: 70px; border-bottom: 1px solid var(--line); }
+    .swatch div:last-child { padding: 8px 10px; font-size: 0.85rem; }
+    .swatch code { color: var(--muted); }
+
+    .fonts { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .font { border: 1px solid var(--line); border-radius: 8px; padding: 20px; }
+    .font .label { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; margin-bottom: 14px; }
+    .font .name { font-size: 1.3rem; font-weight: 600; margin-bottom: 14px; }
+    .font .h { font-weight: 600; font-size: 1.1rem; margin-bottom: 4px; }
+    .font p { margin: 0 0 12px; color: var(--muted); font-size: 17px; }
+    .font .list { font-size: 15px; }
+    .font a { color: var(--accent); font-family: system-ui, sans-serif; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>palette + font options</h1>
+    <p class="note">temporary page for picking styles. "try it on the site" opens the real layout in that font.</p>
+
+    <h2>palette</h2>
+    <div class="swatches">
+      <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><div>background<br><code>#FFFFFF</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#111111"></div><div>text<br><code>#111111</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#6B6B6B"></div><div>muted text<br><code>#6B6B6B</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#E4E4E4"></div><div>lines / borders<br><code>#E4E4E4</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#F5F5F4"></div><div>image placeholder<br><code>#F5F5F4</code></div></div>
+      <div class="swatch"><div class="chip" style="background:#2B59C3"></div><div>link hover (optional)<br><code>#2B59C3</code></div></div>
+    </div>
+
+    <h2>fonts</h2>
+    <div class="fonts" id="fonts"></div>
+  </div>
+
+  <script>
+    const fonts = [
+      ["source-sans", "Source Sans 3", '"Source Sans 3", sans-serif', "sans · default"],
+      ["ibm-plex", "IBM Plex Sans", '"IBM Plex Sans", sans-serif', "sans · a bit technical"],
+      ["system", "System default", "system-ui, sans-serif", "sans · no download, looks native"],
+      ["lora", "Lora", '"Lora", serif', "serif · warm, bookish"],
+      ["source-serif", "Source Serif 4", '"Source Serif 4", serif', "serif · classic, crisp"],
+      ["plex-mono", "IBM Plex Mono", '"IBM Plex Mono", monospace', "mono · typewriter / code feel"],
+    ];
+    const box = document.getElementById("fonts");
+    for (const [key, name, css, kind] of fonts) {
+      box.insertAdjacentHTML("beforeend", `
+        <div class="font" style="font-family:${css.replace(/"/g, "'")}">
+          <div class="label"><span>${kind}</span><a href="index.html?font=${key}">try it on the site →</a></div>
+          <div class="name">andrew chao · ${name}</div>
+          <div class="h">im currently working on:</div>
+          <p>a short description of what this project is and what I'm doing on it. 0123456789</p>
+          <div class="list">current projects<br>project 1<br>project 2</div>
+        </div>`);
+    }
+  </script>
+</body>
+</html>
