@@ -13,6 +13,9 @@
   <div class="layout">
     <nav class="sidebar">
       <a class="name" href="index.html">andrew chao</a>
+      <div class="contact">
+        <a href="mailto:rewchao@umich.edu">rewchao@umich.edu</a>
+      </div>
       <h2>current projects</h2>
       <ul id="nav-current"></ul>
       <h2>past projects</h2>
@@ -34,6 +37,7 @@
     renderNav();
     renderCards(projects.current, "current", false);
     renderCards(projects.past, "past", true);
+    rememberScroll();
   </script>
 </body>
 </html>

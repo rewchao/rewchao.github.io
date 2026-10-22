@@ -13,6 +13,9 @@
   <div class="layout">
     <nav class="sidebar">
       <a class="name" href="index.html">andrew chao</a>
+      <div class="contact">
+        <a href="mailto:rewchao@umich.edu">rewchao@umich.edu</a>
+      </div>
       <h2>current projects</h2>
       <ul id="nav-current"></ul>
       <h2>past projects</h2>
@@ -21,11 +24,18 @@
 
     <main class="detail" id="detail">
       <a class="back" href="index.html">← all projects</a>
+      <div class="cols">
+        <div class="text"></div>
+        <div class="gallery"></div>
+      </div>
     </main>
   </div>
 
   <script src="projects.js"></script>
   <script src="site.js"></script>
-  <script>renderProject();</script>
+  <script>
+    renderProject();
+    backLink(document.querySelector(".back"));
+  </script>
 </body>
 </html>

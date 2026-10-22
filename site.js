@@ -7,10 +7,10 @@ function el(tag, props = {}, ...children) {
   return node;
 }
 
-function image(p) {
-  return p.image
-    ? el("img", { className: "img", src: p.image, alt: p.title })
-    : el("div", { className: "img", textContent: "image" });
+function image(src, alt, label = "image") {
+  return src
+    ? el("img", { className: "img", src, alt })
+    : el("div", { className: "img", textContent: label });
 }
 
 // sidebar lists, on every page
@@ -29,7 +29,7 @@ function renderCards(list, mainId, small) {
   for (const p of list) {
     document.getElementById(mainId).append(
       el("a", { className: "project" + (small ? " small" : ""), href: pageUrl(p) },
-        image(p),
+        image(p.image, p.title),
         el("div", {},
           el("h3", { textContent: p.title }),
           el("p", { textContent: p.desc }),
@@ -49,9 +49,52 @@ function renderProject() {
     return;
   }
   document.title = p.title + " · andrew chao";
-  main.append(
+  main.querySelector(".text").append(
     el("h1", { textContent: p.title }),
-    image(p),
     el("p", { className: "desc", textContent: p.desc }),
     el("div", { className: "body" }, ...(p.body || []).map(t => el("p", { textContent: t }))));
+  renderGallery(p, main.querySelector(".gallery"));
+}
+
+// project page gallery: one large image, thumbnails below swap it
+function renderGallery(p, box) {
+  const pics = p.gallery && p.gallery.length ? p.gallery : [p.image];
+  let big = image(pics[0], p.title);
+  box.append(big);
+  if (pics.length < 2) return;
+  const thumbs = el("div", { className: "thumbs" });
+  pics.forEach((src, i) => {
+    const btn = el("button", { type: "button", className: "thumb", ariaLabel: "show image " + (i + 1) },
+      image(src, "", "img " + (i + 1)));
+    if (i === 0) btn.setAttribute("aria-current", "true");
+    btn.onclick = () => {
+      const next = image(src, p.title);
+      big.replaceWith(next);
+      big = next;
+      thumbs.querySelector("[aria-current]").removeAttribute("aria-current");
+      btn.setAttribute("aria-current", "true");
+    };
+    thumbs.append(btn);
+  });
+  box.append(thumbs);
+}
+
+// home page keeps its scroll position when you come back via "← all projects"
+function rememberScroll() {
+  try {
+    const y = sessionStorage.getItem("homeScroll");
+    if (y !== null && sessionStorage.getItem("restoreScroll")) {
+      window.scrollTo({ top: +y, behavior: "instant" });
+    }
+    sessionStorage.removeItem("restoreScroll");
+  } catch (e) {}
+  addEventListener("pagehide", () => {
+    try { sessionStorage.setItem("homeScroll", scrollY); } catch (e) {}
+  });
+}
+
+function backLink(a) {
+  a.addEventListener("click", () => {
+    try { sessionStorage.setItem("restoreScroll", "1"); } catch (e) {}
+  });
 }
