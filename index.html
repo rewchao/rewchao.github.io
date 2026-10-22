@@ -6,7 +6,7 @@
   <title>andrew chao</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link id="font-link" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&display=swap">
   <style>
     /* ---- palette: change these to restyle the whole site ---- */
     :root {
@@ -18,7 +18,7 @@
       --accent: #2B59C3;    /* link hover only */
 
       /* ---- font: swap this line to change the site font ---- */
-      --font: "Source Sans 3", system-ui, sans-serif;
+      --font: "Lora", Georgia, serif;
     }
 
     * { box-sizing: border-box; }
@@ -157,22 +157,6 @@
     }
     render(projects.current, "nav-current", "current", false);
     render(projects.past, "nav-past", "past", true);
-
-    // ---- temporary: try other fonts with ?font=lora (see options.html). Remove once a font is picked. ----
-    const fontOptions = {
-      "source-sans": ['"Source Sans 3", sans-serif', "Source+Sans+3:wght@400;600"],
-      "ibm-plex": ['"IBM Plex Sans", sans-serif', "IBM+Plex+Sans:wght@400;600"],
-      "lora": ['"Lora", serif', "Lora:wght@400;600"],
-      "source-serif": ['"Source Serif 4", serif', "Source+Serif+4:opsz,wght@8..60,400;8..60,600"],
-      "plex-mono": ['"IBM Plex Mono", monospace', "IBM+Plex+Mono:wght@400;600"],
-      "system": ["system-ui, sans-serif", null],
-    };
-    const choice = fontOptions[new URLSearchParams(location.search).get("font")];
-    if (choice) {
-      const [css, query] = choice;
-      if (query) document.getElementById("font-link").href = `https://fonts.googleapis.com/css2?family=${query}&display=swap`;
-      document.documentElement.style.setProperty("--font", css);
-    }
   </script>
 </body>
 </html>
